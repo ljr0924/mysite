@@ -1,0 +1,18 @@
+{% extends 'blog/blog_list.html' %}
+
+{# 标题 #}
+{% block title %}
+    {{ blog_type.type_name }}
+{% endblock %}
+
+{# 导航栏 是否被激活 #}
+{% block nav_blog_bar %}
+    active
+{% endblock %}
+
+{# 内容 #}
+{% block blog_list_title %}
+    分类：{{ blog_type.type_name }}
+    <a href="{% url "blog_list" %}">查看全部分类</a>
+{% endblock %}
+

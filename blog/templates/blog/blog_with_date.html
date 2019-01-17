@@ -1,0 +1,17 @@
+{% extends 'blog/blog_list.html' %}
+
+{# 标题 #}
+{% block title %}
+    {{ blogs_with_date }}
+{% endblock %}
+
+{# 导航栏 是否被激活 #}
+{% block nav_blog_bar %}
+    active
+{% endblock %}
+
+{# 内容 #}
+{% block blog_list_title %}
+    日期归档：{{ blogs_with_date }}
+    <a href="{% url "blog_list" %}">查看全部分类</a>
+{% endblock %}
