@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from ckeditor_uploader.fields import RichTextUploadingField
 
 # Create your models here.
 
@@ -17,7 +18,7 @@ class Blog(models.Model):
     # 分类
     blog_type = models.ForeignKey(BlogType, on_delete=models.DO_NOTHING, related_name='blog_type')
     # 内容
-    content = models.TextField()
+    content = RichTextUploadingField()
     # 作者
     author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     # 创建时间

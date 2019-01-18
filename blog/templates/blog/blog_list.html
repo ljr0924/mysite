@@ -29,7 +29,7 @@
                                         href="{% url 'blogs_with_type' blog.blog_type.pk %}">{{ blog.blog_type.type_name }}</a>
                                     <span class="glyphicon glyphicon-time"></span>{{ blog.created_time }}
                                 </p>
-                                <p>{{ blog.content | truncatechars:120 }}</p>
+                                <p>{{ blog.content | truncatechars:120 | safe}}</p>
                             </div>
                         {% empty %}
                             <div class="blog">
