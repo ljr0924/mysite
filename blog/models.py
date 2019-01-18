@@ -1,9 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from ckeditor_uploader.fields import RichTextUploadingField
+from read_statistics.models import ReadNumExpandMethod
 
 # Create your models here.
-
 class BlogType(models.Model):
     # 分类名字
     type_name = models.CharField(max_length=20)
@@ -12,7 +12,7 @@ class BlogType(models.Model):
         return self.type_name
 
 
-class Blog(models.Model):
+class Blog(models.Model, ReadNumExpandMethod):
     # 标题
     title = models.CharField(max_length=50)
     # 分类
@@ -31,4 +31,3 @@ class Blog(models.Model):
 
     class Meta:
         ordering = ['-created_time']
-

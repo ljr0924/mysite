@@ -26,10 +26,12 @@
                                 </h3>
                                 <p class="blog-info">
                                     <span class="glyphicon glyphicon-tag"></span><a
-                                        href="{% url 'blogs_with_type' blog.blog_type.pk %}">{{ blog.blog_type.type_name }}</a>
-                                    <span class="glyphicon glyphicon-time"></span>{{ blog.created_time }}
+                                        href="{% url 'blogs_with_type' blog.blog_type.pk %}">{{ blog.blog_type.type_name }}</a>&nbsp;
+                                    <span class="glyphicon glyphicon-time"></span>{{ blog.created_time }}&nbsp;
+                                    阅读量：{{ blog.get_read_num }}
                                 </p>
-                                <p>{{ blog.content | truncatechars:120 | safe}}</p>
+                                <p>{{ blog.content | truncatechars:120 | safe }}</p>
+
                             </div>
                         {% empty %}
                             <div class="blog">

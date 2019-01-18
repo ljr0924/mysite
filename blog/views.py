@@ -1,9 +1,11 @@
 from django.shortcuts import get_object_or_404, render
-# 分页器
 from django.core.paginator import Paginator
-from .models import Blog, BlogType
 from django.conf import settings
 from django.db.models import Count
+from django.db.models.fields import exceptions
+# 分页器
+from .models import Blog, BlogType
+from read_statistics.utils import read_statistics_once_read
 
 # Create your views here.
 def blog_list(request):
@@ -15,20 +17,35 @@ def blog_list(request):
 def blog_detail(request, blog_pk):  # pk -> 主键
     context = {}
     blog = get_object_or_404(Blog, pk=blog_pk)
-    context['previous_blog'] = Blog.objects.filter(created_time__gt=blog.created_time).last()
-    context['next_blog'] = Blog.objects.filter(created_time__lt=blog.created_time).first()
+    key = read_statistics_once_read(request, blog)
+
+    # 获取上下篇博客
+    # context['previous_blog'] = Blog.objects.filter(created_time__gt=blog.created_time).last()
+    # context['next_blog'] = Blog.objects.filter(created_time__lt=blog.created_time).first()
+    try:
+        context['previous_blog'] = blog.get_previous_by_created_time()
+    except exceptions.ObjectDoesNotExist:
+        pass
+    try:
+        context['next_blog'] = blog.get_next_by_created_time()
+    except exceptions.ObjectDoesNotExist:
+        pass
+
     context['blog'] = blog
-    return render(request, 'blog/blog_detail.html', context)
+    response = render(request, 'blog/blog_detail.html', context)
+    # 设置cookies
+    response.set_cookie(key, 'true')
+    return response
 
 
 def blogs_with_type(request, blog_type_pk):
     # get_page 可以进行容错处理
     blog_type = get_object_or_404(BlogType, pk=blog_type_pk)
     # 通过分类获取博客
-    blogs = Blog.objects.filter(blog_type=blog_type)
-    context = get_common_data(request, blogs)
+    blog = Blog.objects.filter(blog_type=blog_type)
+    context = get_common_data(request, blog)
     context['blog_type'] = blog_type                    # 博客分类
-    return render(request, 'blog/blogs_with_type.html', context)
+    return render(request, 'blog/blog_with_type.html', context)
 
 
 def blogs_with_date(request, year, month, day):
