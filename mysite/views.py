@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.contrib.contenttypes.models import ContentType
 from read_statistics.utils import get_seven_days_read_data
 from blog.models import Blog
@@ -11,4 +11,4 @@ def home(request):
     context = {}
     context['read_nums_list'] = read_nums_list
     context['date_list'] = date_list
-    return render_to_response('home.html', context)
+    return render(request, 'home.html', context)
