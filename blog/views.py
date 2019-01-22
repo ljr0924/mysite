@@ -17,6 +17,8 @@ def blog_list(request):
 def blog_detail(request, blog_pk):  # pk -> 主键
     context = {}
     blog = get_object_or_404(Blog, pk=blog_pk)
+
+    # 阅读数 +1 返回写入cookie的key
     key = read_statistics_once_read(request, blog)
 
     # 获取上下篇博客

@@ -17,42 +17,50 @@
 {% block content %}
     <h3 class="home-content">欢迎来到我的博客</h3>
     <div id="container" style="width: 600px;height:400px;"></div>
-    <h3>今天热门博客</h3>
-    <ul>
-        {% for hot_blog in today_hot_blog %}
-            <li>
-                <a href="{% url 'blog_detail' hot_blog.object_id %}">
-                    {{ hot_blog.content_object.title }}({{ hot_blog.read_num }})
-                </a>
-            </li>
-        {% empty %}
-            <li>暂时没有</li>
-        {% endfor %}
-    </ul>
-    <h3>昨天热门博客</h3>
-    <ul>
-        {% for hot_blog in yesterday_hot_blog %}
-            <li>
-                <a href="{% url 'blog_detail' hot_blog.object_id %}">
-                    {{ hot_blog.content_object.title }}({{ hot_blog.read_num }})
-                </a>
-            </li>
-        {% empty %}
-            <li>暂时没有</li>
-        {% endfor %}
-    </ul>
-    <h3>近七天热门博客</h3>
-    <ul>
-        {% for hot_blog in weekly_hot_blog %}
-            <li>
-                <a href="{% url 'blog_detail' hot_blog.id %}">
-                    {{ hot_blog.title }}({{ hot_blog.read_num_sum }})
-                </a>
-            </li>
-        {% empty %}
-            <li>暂时没有</li>
-        {% endfor %}
-    </ul>
+    <div class="hot-blog">
+        <h3>今天热门博客</h3>
+        <ul>
+            {% for hot_blog in today_hot_blog %}
+                <li>
+                    <a href="{% url 'blog_detail' hot_blog.object_id %}">
+                        {{ hot_blog.content_object.title }}({{ hot_blog.read_num }})
+                    </a>
+                </li>
+            {% empty %}
+                <li>暂时没有</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="hot-blog">
+        <h3>昨天热门博客</h3>
+        <ul>
+            {% for hot_blog in yesterday_hot_blog %}
+                <li>
+                    <a href="{% url 'blog_detail' hot_blog.object_id %}">
+                        {{ hot_blog.content_object.title }}({{ hot_blog.read_num }})
+                    </a>
+                </li>
+            {% empty %}
+                <li>暂时没有</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="hot-blog">
+        <h3>近七天热门博客</h3>
+        <ul>
+            {% for hot_blog in weekly_hot_blog %}
+                <li>
+                    <a href="{% url 'blog_detail' hot_blog.id %}">
+                        {{ hot_blog.title }}({{ hot_blog.read_num_sum }})
+                    </a>
+                </li>
+            {% empty %}
+                <li>暂时没有</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+
     <script>
         // 图表配置
         var options = {
