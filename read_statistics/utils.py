@@ -23,6 +23,7 @@ def read_statistics_once_read(request, obj):
 
 
 def get_seven_days_read_data(content_type):
+    # 获取近七天的日总阅读量
     today = timezone.now().date()
     date_list = []
     read_nums_list = []
@@ -34,3 +35,12 @@ def get_seven_days_read_data(content_type):
         result = read_details.aggregate(read_num_sum=Sum('read_num'))
         read_nums_list.append(result['read_num_sum'] or 0) # 前面如果为False,取默认值0
     return date_list, read_nums_list
+
+
+def get_today_and_yesterday_hot_blog(content_type):
+    # 获取今天热门博客
+    today = timezone.now().date()
+    yesterday = today - datetime.timedelta(days=1)
+    today_read_details = ReadDetail.objects.filter(content_type=content_type, date=today).order_by('-read_num')
+    yesterday_read_details = ReadDetail.objects.filter(content_type=content_type, date=yesterday).order_by('-read_num')
+    return today_read_details[:7], yesterday_read_details[:7]

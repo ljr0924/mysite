@@ -24,8 +24,10 @@ class ReadNumExpandMethod():
 
 class ReadDetail(models.Model):
     read_num = models.IntegerField(default=0)
-
     date = models.DateField(default=timezone.now)
     content_type = models.ForeignKey(ContentType, on_delete=models.DO_NOTHING)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        ordering = ['-date']
