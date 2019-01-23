@@ -93,8 +93,6 @@ def register(request):
             # 注册完成之后进行登录操作
             user = auth.authenticate(username=username, password=password)
             auth.login(request, user)
-            print(request.META)
-            print(request.GET.get('from', reverse('home')))
             return redirect(request.GET.get('from', reverse('home')))
 
     # 处理GET请求
