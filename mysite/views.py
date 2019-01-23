@@ -4,21 +4,23 @@ from django.utils import timezone
 from django.db.models import Sum
 from django.core.cache import cache
 from django.contrib import auth
+from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 
 from blog.models import Blog
 from read_statistics.utils import get_seven_days_read_data, get_today_and_yesterday_hot_blog
+from .forms import LoginForm, RegisterForm
 
 
 def get_7_day_hot_blog():
     today = timezone.now().date()
     date = today - datetime.timedelta(days=7)
     read_details = Blog.objects.filter(read_details__date__lt=today,
-                                       read_details__date__gte=date)\
-                               .values('id', 'title')\
-                               .annotate(read_num_sum=Sum('read_details__read_num'))\
-                               .order_by('-read_num_sum')
+                                       read_details__date__gte=date) \
+        .values('id', 'title') \
+        .annotate(read_num_sum=Sum('read_details__read_num')) \
+        .order_by('-read_num_sum')
     return read_details[:7]
 
 
@@ -45,12 +47,59 @@ def home(request):
 
 
 def login(request):
-    username = request.POST.get('username', '')
-    password = request.POST.get('password', '')
-    user = auth.authenticate(request, username=username, password=password)
-    referer = request.META.get('HTTP_REFERER', reverse('home'))
-    if user is not None:
-        auth.login(request, user)
-        return redirect(referer)
-    else:
-        return render(request, 'error.html', {'message':'用户名或密码不正确'})
+    # username = request.POST.get('username', '')
+    # password = request.POST.get('password', '')
+    # user = auth.authenticate(request, username=username, password=password)
+    # referer = request.META.get('HTTP_REFERER', reverse('home'))
+    # if user is not None:
+    #     auth.login(request, user)
+    #     return redirect(referer)
+    # else:
+    #     return render(request, 'error.html', {'message':'用户名或密码不正确'})
+    # 处理POST请求
+    if request.method == 'POST':
+        login_form = LoginForm(request.POST)
+        # 验证表单是否有效
+        if login_form.is_valid():
+            # 该user已在LoginForm类里面进行验证操作
+            user = login_form.cleaned_data['user']
+            # 登录
+            auth.login(request, user)
+            print(request.GET)
+            print(request.GET.get('from', reverse('home')))
+            print(request.META.get('HTTP'))
+            return redirect(request.GET.get('from', reverse('home')))
+
+    # 处理GET请求
+    elif request.method == 'GET':
+        login_form = LoginForm()
+    context = {}
+    context['login_form'] = login_form
+    return render(request, 'login.html', context)
+
+
+def register(request):
+    # 处理POST请求
+    if request.method == 'POST':
+        register_form = RegisterForm(request.POST)
+        # 验证表单是否有效
+        if register_form.is_valid():
+            username = register_form.cleaned_data['username']
+            email = register_form.cleaned_data['email']
+            password = register_form.cleaned_data['password_again']
+            # 注册用户
+            user = User.objects.create_user(username=username, email=email, password=password)
+            user.save()
+            # 注册完成之后进行登录操作
+            user = auth.authenticate(username=username, password=password)
+            auth.login(request, user)
+            print(request.META)
+            print(request.GET.get('from', reverse('home')))
+            return redirect(request.GET.get('from', reverse('home')))
+
+    # 处理GET请求
+    elif request.method == 'GET':
+        register_form = RegisterForm()
+    context = {}
+    context['register_form'] = register_form
+    return render(request, 'register.html', context)

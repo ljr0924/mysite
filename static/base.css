@@ -7,3 +7,6 @@ body {
     margin-top: 100px!important;
 }
 
+li {
+   list-style: none;
+}
