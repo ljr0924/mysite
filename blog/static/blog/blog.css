@@ -26,7 +26,16 @@ ul.blog-info-description li{
     margin-right: 2em;
 }
 
-div.blog_more{
+div.blog-more{
     display: inline;
     margin: 10px;
+}
+
+div.comment-area{
+    margin-top: 2em;
+}
+
+.comment-area-title{
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.4em;
 }

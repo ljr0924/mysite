@@ -1,9 +1,12 @@
 import datetime
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.db.models import Sum
 from django.core.cache import cache
+from django.contrib import auth
 from django.contrib.contenttypes.models import ContentType
+from django.urls import reverse
+
 from blog.models import Blog
 from read_statistics.utils import get_seven_days_read_data, get_today_and_yesterday_hot_blog
 
@@ -17,7 +20,6 @@ def get_7_day_hot_blog():
                                .annotate(read_num_sum=Sum('read_details__read_num'))\
                                .order_by('-read_num_sum')
     return read_details[:7]
-
 
 
 def home(request):
@@ -41,3 +43,14 @@ def home(request):
     context['weekly_hot_blog'] = weekly_hot_blog
     return render(request, 'home.html', context)
 
+
+def login(request):
+    username = request.POST.get('username', '')
+    password = request.POST.get('password', '')
+    user = auth.authenticate(request, username=username, password=password)
+    referer = request.META.get('HTTP_REFERER', reverse('home'))
+    if user is not None:
+        auth.login(request, user)
+        return redirect(referer)
+    else:
+        return render(request, 'error.html', {'message':'用户名或密码不正确'})
