@@ -3,6 +3,8 @@
 
 {% block header_extends %}
     <link rel="stylesheet" href="{% static 'blog/blog.css' %}">
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
 {% endblock %}
 
 {% block title %}{{ blog.title }}{% endblock %}
@@ -45,14 +47,11 @@
                     <h3 class="comment-area-title">评论提交区域</h3>
                     {% if user.is_authenticated %}
                         <form action="{% url 'update_comment' %}" method="post" style="overflow: hidden">
+                            <label>{{ request.user }}，欢迎回来</label>
                             {% csrf_token %}
-                            <div class="form-group">
-                                <label for="comment_text">{{ request.user }}，欢迎回来</label>
-                                <textarea id="comment_text" class="form-control"
-                                          name="text" rows="4"></textarea>
-                            </div>
-                            <input type="hidden" name="object_id" value="{{ blog.pk }}">
-                            <input type="hidden" name="content_type" value="blog">
+                            {% for field in comment_form %}
+                                {{ field }}
+                            {% endfor %}
                             <input type="submit" value="评论" class="btn btn-primary" style="float: right">
                         </form>
                     {% else %}

@@ -8,6 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from .models import Blog, BlogType
 from read_statistics.utils import read_statistics_once_read
 from comment.models import Comment
+from comment.forms import CommentForm
 
 # Create your views here.
 def blog_list(request):
@@ -38,6 +39,8 @@ def blog_detail(request, blog_pk):  # pk -> 主键
     except exceptions.ObjectDoesNotExist:
         pass
     context['comments'] = comments
+    context['comment_form'] = CommentForm(initial={'content_type':blog_content_type,
+                                                   'object_id':blog.pk})
     context['blog'] = blog
     response = render(request, 'blog/blog_detail.html', context)
     # 设置cookies
