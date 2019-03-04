@@ -25,7 +25,7 @@ def blog_detail(request, blog_pk):  # pk -> 主键
     key = read_statistics_once_read(request, blog)
     blog_content_type = ContentType.objects.get_for_model(blog)
     # 获取评论
-    comments = Comment.objects.filter(content_type=blog_content_type, object_id=blog.pk)
+    comments = Comment.objects.filter(content_type=blog_content_type, object_id=blog.pk, parent=None)
 
     # 获取上下篇博客
     # context['previous_blog'] = Blog.objects.filter(created_time__gt=blog.created_time).last()
@@ -40,7 +40,8 @@ def blog_detail(request, blog_pk):  # pk -> 主键
         pass
     context['comments'] = comments
     context['comment_form'] = CommentForm(initial={'content_type':blog_content_type,
-                                                   'object_id':blog.pk})
+                                                   'object_id':blog.pk,
+                                                   'reply_comment_id':0})
     context['blog'] = blog
     response = render(request, 'blog/blog_detail.html', context)
     # 设置cookies
