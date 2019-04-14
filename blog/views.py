@@ -3,17 +3,14 @@ from django.core.paginator import Paginator
 from django.conf import settings
 from django.db.models import Count
 from django.db.models.fields import exceptions
-from django.contrib.contenttypes.models import ContentType
 # 分页器
 from .models import Blog, BlogType
 from read_statistics.utils import read_statistics_once_read
-from comment.models import Comment
-from comment.forms import CommentForm
 
 # Create your views here.
 def blog_list(request):
-    blogs = Blog.objects.all()
-    context = get_common_data(request, blogs)
+    blog = Blog.objects.all()
+    context = get_common_data(request, blog)
     return render(request, 'blog/blog_list.html', context)
 
 
@@ -23,9 +20,6 @@ def blog_detail(request, blog_pk):  # pk -> 主键
 
     # 阅读数 +1 返回写入cookie的key
     key = read_statistics_once_read(request, blog)
-    blog_content_type = ContentType.objects.get_for_model(blog)
-    # 获取评论
-    comments = Comment.objects.filter(content_type=blog_content_type, object_id=blog.pk, parent=None)
 
     # 获取上下篇博客
     # context['previous_blog'] = Blog.objects.filter(created_time__gt=blog.created_time).last()
@@ -38,10 +32,6 @@ def blog_detail(request, blog_pk):  # pk -> 主键
         context['next_blog'] = blog.get_next_by_created_time()
     except exceptions.ObjectDoesNotExist:
         pass
-    context['comments'] = comments
-    context['comment_form'] = CommentForm(initial={'content_type':blog_content_type,
-                                                   'object_id':blog.pk,
-                                                   'reply_comment_id':0})
     context['blog'] = blog
     response = render(request, 'blog/blog_detail.html', context)
     # 设置cookies

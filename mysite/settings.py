@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'blog',
     'read_statistics',
     'comment',
+    'likes',
+    'user'
 ]
 
 MIDDLEWARE = [
@@ -67,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'user.context_processors.login_form'
             ],
         },
     },
@@ -113,7 +116,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
@@ -159,3 +162,13 @@ CACHES = {
         'LOCATION': 'my_cache_table',
     }
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'ljr960924@qq.com'
+EMAIL_HOST_PASSWORD = 'efhfzqxvpkfwbeei'
+EMAIL_SUBJECT_PREFIX = '[梁嘉荣的博客]'
+EMAIL_USE_TLS = True # 与SMTP服务器通信时，是否启动TLS链接（安全链接）
+
+from django.core.mail.backends.smtp import EmailBackend
