@@ -26,7 +26,9 @@ def login(request):
             # 登录
             auth.login(request, user)
             return redirect(request.GET.get('from', reverse('home')))
-        data['login_form'] = login_form
+    else:
+        login_form = LoginForm()
+    data['login_form'] = login_form
     return render(request, 'user/login.html', data)
 
 
