@@ -1,5 +1,3 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse
 from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
 from .models import Comment
@@ -11,7 +9,8 @@ def update_comment(request):
     # referer = request.META.get('HTTP_REFERER', reverse('home'))
     data = {}
     comment_form = CommentForm(request.POST, user=request.user)
-    if comment_form.is_valid():  # 判断表单有效性
+    # 判断表单有效性
+    if comment_form.is_valid():
         comment = Comment()
         comment.user = comment_form.cleaned_data['user']
         comment.text = comment_form.cleaned_data['text']
@@ -24,7 +23,11 @@ def update_comment(request):
             comment.reply_to = parent.user
 
         comment.save()
-        # return redirect(referer)
+
+        # 发送邮件
+        comment.send_mail()
+
+        # 返回数据
         data['status'] = "success"
         data['username'] = comment.user.get_nickname_or_username()
         data['comment_time'] = comment.comment_time.strftime('%Y-%m-%d %H:%M:%S')

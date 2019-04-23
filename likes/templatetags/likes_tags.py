@@ -10,7 +10,6 @@ def get_like_count(obj):
     content_type = ContentType.objects.get_for_model(obj)
     like_count, created = LikeCount.objects.get_or_create(content_type=content_type,
                                                           object_id=obj.id)
-    print('like num: ', like_count.liked_num)
     return like_count.liked_num
 
 
@@ -26,10 +25,6 @@ def get_like_status(context, obj):
                                  user=user
                                  ).exists():
         # 如果已点赞，返回active
-        print(LikeRecord.objects.get(content_type=content_type,
-                                 object_id=obj.pk,
-                                 user=user
-                                 ))
         return 'active'
     else:
         return ''
