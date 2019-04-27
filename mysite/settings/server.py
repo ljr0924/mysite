@@ -31,13 +31,13 @@ ALLOWED_HOSTS = ['*']
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
-DATABASES_PASSWORD = os.environ['DATABASES_PASSWORD']
+DATABASE_PASSWORD = os.environ['DATABASE_PASSWORD']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'mysite_db',
         'USER': 'ljr',
-        'PASSWORD': DATABASES_PASSWORD,
+        'PASSWORD': DATABASE_PASSWORD,
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
@@ -63,7 +63,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '~/mysite.log',
+            'filename': '/root/mysite.log',
         },
         'mail_admins': {
             'level': 'ERROR',
